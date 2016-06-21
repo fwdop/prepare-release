@@ -32,3 +32,7 @@ The version you want to publish. Typically this will be `$npm_package_version`
 ### `--deploy-major` (optional)
 
 Only deploy the master version. This will create folder that is only named after the major version
+
+### `--ignore-dot-files` (optional)
+
+Ignore dot files that are present in the input folder
