@@ -47,7 +47,7 @@ module.exports = function(version, latest, input, output, onlyDeployMajor, ignor
         return console.error(err);
       }
     });
-
-    console.log('done!');
   }
+
+  console.log('done!');
 };
