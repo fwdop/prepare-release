@@ -29,6 +29,10 @@ The folder that is created by this package
 
 The version you want to publish. Typically this will be `$npm_package_version`
 
+### `--latest` (optional)
+
+This will create an additional folder containing the same artifacts as output.
+
 ### `--deploy-major` (optional)
 
 Only deploy the major version. This will create a folder that is only named after the major version.

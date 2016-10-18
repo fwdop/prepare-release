@@ -4,7 +4,7 @@ var semver = require('semver');
 var path = require('path');
 var ncp = require('ncp').ncp;
 
-module.exports = function(version, input, output, onlyDeployMajor, ignoreDotFiles) {
+module.exports = function(version, latest, input, output, onlyDeployMajor, ignoreDotFiles) {
   semver.valid(version);
 
   var versionToDeploy = version;
@@ -34,6 +34,20 @@ module.exports = function(version, input, output, onlyDeployMajor, ignoreDotFile
     if (err) {
       return console.error(err);
     }
-    console.log('done!');
   });
+
+  if (latest) {
+    var pathToLatest = path.join(latest);
+
+    rimraf.sync(pathToLatest);
+    mkdirp.sync(pathToLatest);
+
+    ncp(path.join(input), pathToLatest, options, function(err) {
+      if (err) {
+        return console.error(err);
+      }
+    });
+  }
+
+  console.log('done!');
 };
