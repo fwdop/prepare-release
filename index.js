@@ -4,28 +4,45 @@ var semver = require('semver');
 var path = require('path');
 var ncp = require('ncp').ncp;
 
-module.exports = function(version, latest, input, output, onlyDeployMajor, ignoreDotFiles) {
-  semver.valid(version);
+function filterDotFiles(path) {
+  var pathParts = path.split('/');
+  var filename = pathParts[pathParts.length - 1];
+  if (filename[0] === '.') {
+    return false;
+  }
+  return true;
+}
 
-  var versionToDeploy = version;
+function getCommitHash() {
+  return require('child_process')
+    .execSync('git rev-parse HEAD')
+    .toString().trim();
+}
+
+module.exports = function (
+  version, latest, input, output, onlyDeployMajor, ignoreDotFiles, deployCommitHash
+) {
+  var folderName = '';
   var options = {};
 
-  if(onlyDeployMajor) {
-    versionToDeploy = semver.major(version);
+  if (version && !deployCommitHash) {
+    semver.valid(version);
+    if (onlyDeployMajor) {
+      folderName = semver.major(version);
+    } else {
+      folderName = version;
+    }
+  }
+
+  if (deployCommitHash) {
+    folderName = getCommitHash();
   }
 
   if(ignoreDotFiles === true) {
-    options.filter = function(path) {
-      var pathParts = path.split('/');
-      var filename = pathParts[pathParts.length - 1];
-      if (filename[0] === '.') {
-        return false;
-      }
-      return true;
-    };
+    options.filter = filterDotFiles;
   }
 
-  var pathToCreate = path.join(output, versionToDeploy + '');
+  var pathToCreate = path.join(output, String(folderName));
 
   rimraf.sync(pathToCreate);
   mkdirp.sync(pathToCreate);
