@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var releasePrepare = require('../');
-var argv = require('optimist').argv;
+var argv = require('minimist')(process.argv.slice(2));
 
 var onlyDeployMajor = argv['deploy-major'];
 var version = argv.version;
